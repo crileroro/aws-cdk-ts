@@ -37,6 +37,8 @@
     "@aws-cdk/core:target-partitions": [
       "aws",
       "aws-cn"
-    ]
+    ],
+    "domain_name": "my-domain.co",
+    "subdomain_name": "react-app"
   }
 }

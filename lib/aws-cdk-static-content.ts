@@ -12,16 +12,18 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 export class AwsCdkStaticContent extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-    const domainName = "cristhianroa.com"
-    const subDomain = "react"
+
+    const subdomainName = this.node.tryGetContext('subdomain_name');
+    const domainName = this.node.tryGetContext('domain_name');
+
 
     const zone = route53.HostedZone.fromLookup(this, 'Zone', { domainName: domainName });
-    const siteDomain = subDomain + '.' + domainName;
+    const siteDomain = subdomainName + '.' + domainName;
     const cloudfrontOAI = new cloudfront.OriginAccessIdentity(this, 'cloudfront-OAI', {
       comment: `OAI for sample React app`
     });
     
-    const siteBucket = new s3.Bucket(this, 'reactSiteBucket', {
+    const siteBucket = new s3.Bucket(this, 'staticSiteBucket', {
       bucketName: siteDomain,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -71,7 +73,7 @@ export class AwsCdkStaticContent extends cdk.Stack {
     });
 
     // Deploy site contents to S3 bucket
-    new s3deploy.BucketDeployment(this, 'DeployWithInvalidation', {
+    new s3deploy.BucketDeployment(this, 'deployInvalidation', {
       sources: [s3deploy.Source.asset('./react-app/build')],
       destinationBucket: siteBucket,
       distribution,

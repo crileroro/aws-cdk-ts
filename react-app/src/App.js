@@ -7,7 +7,7 @@ const App = () => {
   const [result, setResult] = useState({ loading: true, files: null });
   useEffect(() => {
     const getData = async () => {
-      const url = "https://7wx6jrseak.execute-api.eu-west-1.amazonaws.com/prod/";
+      const url = "https://mgpkl3ulfa.execute-api.eu-west-1.amazonaws.com/prod/";
       try {
         let result = await axios.get(url);
         setResult({ loading: false, files: result.data });
